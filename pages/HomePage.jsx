@@ -77,15 +77,29 @@ export default function HomePage({ themeProp, onSetTheme }) {
       newSrc += "&theme=dark";
     }
     setSrc(newSrc);
-    RestoreCode();
+    setTimeout(() => {
+      RestoreCode();
+    }, 50);
     window.addEventListener("message", handleMessageFromEditor);
     return () => {
-      window.addEventListener("message", handleMessageFromEditor);
+      window.removeEventListener("message", handleMessageFromEditor);
     };
   }, [themeProp]);
 
   useEffect(() => {
     RestoreCode();
+    // const fallbackTimer = setTimeout(() => {
+    //   if (!isEditorLoaded) {
+    //     console.warn("Iframe load fallback triggered");
+    //     setIsEditorLoaded(true);
+    //     RestoreCode();
+    //   }
+    // }, 5000);
+  
+    // return () => {
+    //   console.log("Cleaning up fallback timer...");
+    //   clearTimeout(fallbackTimer);
+    // };
   }, [isEditorLoaded]);
 
   return (
