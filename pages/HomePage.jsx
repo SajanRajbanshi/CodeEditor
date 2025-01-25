@@ -11,8 +11,8 @@ export default function HomePage({ themeProp, onSetTheme }) {
   const [editorContent, setEditorContent] = useState("print('hello world')");
   const [filename, setFilename] = useState("main.py");
   const [language, setLanguage] = useState("python");
-  const [isEditorLoaded,setIsEditorLoaded] = useState(false);
-  const [isExecutionSuccess,setIsExecutionSuccess] = useState(false);
+  const [isEditorLoaded, setIsEditorLoaded] = useState(false);
+  const [isExecutionSuccess, setIsExecutionSuccess] = useState(false);
 
   function sendMessageToEditor(message) {
     if (editorRef.current) {
@@ -22,8 +22,7 @@ export default function HomePage({ themeProp, onSetTheme }) {
     }
   }
 
-  function handleEditorOnLoad()
-  {
+  function handleEditorOnLoad() {
     setIsEditorLoaded(true);
   }
 
@@ -40,7 +39,7 @@ export default function HomePage({ themeProp, onSetTheme }) {
       setEditorContent(data.code);
       localStorage.setItem("editorContent", data.files[0].content);
       localStorage.setItem("language", data.language);
-      localStorage.setItem("filename",data.files[0].name);
+      localStorage.setItem("filename", data.files[0].name);
     } else if (data.action === "runComplete") {
       if (data.result.success) {
         setIsExecutionSuccess(true);
@@ -51,24 +50,24 @@ export default function HomePage({ themeProp, onSetTheme }) {
     }
   }
 
-  function runCode(){
+  function runCode() {
     sendMessageToEditor({ eventType: "triggerRun" });
-  };
+  }
 
-  function formatCode(){
-    sendMessageToEditor({ event: "run",action:"format" });
-  };
+  function formatCode() {
+    sendMessageToEditor({ event: "run", action: "format" });
+  }
 
-  function RestoreCode(){
+  function RestoreCode() {
     const newCode = localStorage.getItem("editorContent") || editorContent;
     const newLanguage = localStorage.getItem("language") || language;
-    const newFilename= localStorage.getItem("filename") || filename;
+    const newFilename = localStorage.getItem("filename") || filename;
     sendMessageToEditor({
       eventType: "populateCode",
       language: newLanguage,
       files: [{ name: newFilename, content: newCode }],
     });
-  };
+  }
 
   useEffect(() => {
     let newSrc =
@@ -79,7 +78,7 @@ export default function HomePage({ themeProp, onSetTheme }) {
     setSrc(newSrc);
     setTimeout(() => {
       RestoreCode();
-    }, 50);
+    }, 150);
     window.addEventListener("message", handleMessageFromEditor);
     return () => {
       window.removeEventListener("message", handleMessageFromEditor);
@@ -87,19 +86,9 @@ export default function HomePage({ themeProp, onSetTheme }) {
   }, [themeProp]);
 
   useEffect(() => {
-    RestoreCode();
-    // const fallbackTimer = setTimeout(() => {
-    //   if (!isEditorLoaded) {
-    //     console.warn("Iframe load fallback triggered");
-    //     setIsEditorLoaded(true);
-    //     RestoreCode();
-    //   }
-    // }, 5000);
-  
-    // return () => {
-    //   console.log("Cleaning up fallback timer...");
-    //   clearTimeout(fallbackTimer);
-    // };
+    setTimeout(() => {
+      RestoreCode();
+    }, 150);
   }, [isEditorLoaded]);
 
   return (
@@ -115,7 +104,10 @@ export default function HomePage({ themeProp, onSetTheme }) {
           overflow: "hidden",
         }}
       >
-        <ConfettiComponent isExecutionSuccessProp={isExecutionSuccess} onSetIsExecutionSuccess={setIsExecutionSuccess}/>
+        <ConfettiComponent
+          isExecutionSuccessProp={isExecutionSuccess}
+          onSetIsExecutionSuccess={setIsExecutionSuccess}
+        />
         <Stack direction={"row"} flexDirection={"row-reverse"} gap={5}>
           <Button
             sx={{
