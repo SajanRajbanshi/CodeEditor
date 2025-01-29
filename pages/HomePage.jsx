@@ -3,6 +3,7 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { useRef, useState, useEffect } from "react";
 import ConfettiComponent from "../components/ConfettiComponent";
+import { readLocalStorage, writeLocalStorage } from "../helpers/RestoreHelper";
 export default function HomePage({ themeProp, onSetTheme }) {
   const editorRef = useRef(null);
   const [src, setSrc] = useState(
@@ -37,13 +38,17 @@ export default function HomePage({ themeProp, onSetTheme }) {
     const { data } = event;
     if (data.action === "codeUpdate") {
       setEditorContent(data.code);
-      localStorage.setItem("editorContent", data.files[0].content);
+      console.log(data);
+      // localStorage.setItem("editorContent", data.files[0].content);
       localStorage.setItem("language", data.language);
-      localStorage.setItem("filename", data.files[0].name);
+      // localStorage.setItem("filename", data.files[0].name);
+      // writeLocalStorage("editorContent",data.files.map((item)=>item.content));
+      // writeLocalStorage("language",data.language);
+      // writeLocalStorage("filename",data.files.map((item)=>item.name));
+      writeLocalStorage("files", data.files);
     } else if (data.action === "runComplete") {
       if (data.result.success) {
         setIsExecutionSuccess(true);
-        console.log("execution success", data.result);
       } else {
         console.log("execution failed", data.result);
       }
@@ -59,13 +64,18 @@ export default function HomePage({ themeProp, onSetTheme }) {
   }
 
   function RestoreCode() {
-    const newCode = localStorage.getItem("editorContent") || editorContent;
+    // const newCode = localStorage.getItem("editorContent") || editorContent;
     const newLanguage = localStorage.getItem("language") || language;
-    const newFilename = localStorage.getItem("filename") || filename;
+    // const newFilename = localStorage.getItem("filename") || filename;
+    // const newLanguage=readLocalStorage("language") || language;
+    // const editorContentList= readLocalStorage("editorContent") || [editorContent];
+    const files = readLocalStorage("files") || [
+      { name: filename, content: editorContent },
+    ];
     sendMessageToEditor({
       eventType: "populateCode",
       language: newLanguage,
-      files: [{ name: newFilename, content: newCode }],
+      files: files,
     });
   }
 
