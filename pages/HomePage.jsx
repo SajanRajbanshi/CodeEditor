@@ -1,4 +1,4 @@
-import { Button, Stack, useThemeProps } from "@mui/material";
+import { Button, Stack, Typography, useThemeProps } from "@mui/material";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import { useRef, useState, useEffect } from "react";
@@ -112,13 +112,16 @@ export default function HomePage({ themeProp, onSetTheme }) {
             themeProp === "dark" ? "#121212" : "rgba(245,245,245)",
           direction: "column",
           overflow: "hidden",
+          justifyContent:"space-between"
         }}
       >
         <ConfettiComponent
           isExecutionSuccessProp={isExecutionSuccess}
           onSetIsExecutionSuccess={setIsExecutionSuccess}
         />
-        <Stack direction={"row"} flexDirection={"row-reverse"} gap={5}>
+        <Stack direction={"row"} gap={5} justifyContent={"space-between"} alignItems={"center"} flexWrap={"wrap"}>
+        <Typography color={themeProp === "dark" ? "white" : "#5063f0"} fontWeight={300} fontSize={20} marginLeft={2}>Code Ground</Typography>
+          <Stack direction={"row"} flexDirection={"row-reverse"} gap={5} flexWrap={"wrap"}>
           <Button
             sx={{
               color: themeProp === "dark" ? "white" : "#5063f",
@@ -146,6 +149,7 @@ export default function HomePage({ themeProp, onSetTheme }) {
           >
             Format
           </Button>
+          </Stack>
         </Stack>
         <Stack flexGrow={1}>
           <iframe
